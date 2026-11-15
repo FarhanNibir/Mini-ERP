@@ -37,6 +37,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    # Third-party apps
+    "rest_framework",
+
+    # ERP apps
+    "apps.core.apps.CoreConfig",
+    "apps.accounts.apps.AccountsConfig",
+    "apps.catalog.apps.CatalogConfig",
+    "apps.inventory.apps.InventoryConfig",
+    "apps.parties.apps.PartiesConfig",
+    "apps.purchases.apps.PurchasesConfig",
+    "apps.sales.apps.SalesConfig",
+    "apps.accounting.apps.AccountingConfig",
 ]
 
 MIDDLEWARE = [
