@@ -1,0 +1,47 @@
+
+<header class="topbar">
+
+    <div class="topbar-left">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button">
+            <i class="bi bi-list"></i>
+        </button>
+
+        <div class="breadcrumb-area">
+            <span class="breadcrumb-muted">Workspace</span>
+            <i class="bi bi-chevron-right"></i>
+            <strong>Dashboard</strong>
+        </div>
+    </div>
+
+    <div class="topbar-right">
+
+        <!-- Theme Toggle -->
+        <button class="topbar-icon-btn" id="themeToggle"
+                type="button" title="Switch theme">
+            <i class="bi bi-moon-stars" id="themeIcon"></i>
+        </button>
+
+        <!-- Notifications -->
+        <button class="topbar-icon-btn notification-btn"
+                type="button" title="Notifications">
+            <i class="bi bi-bell"></i>
+            <span class="notification-dot"></span>
+        </button>
+
+        <!-- User Profile -->
+        <div class="user-profile">
+            <div class="user-avatar">
+                <i class="bi bi-person"></i>
+            </div>
+
+            <div class="user-info">
+                <strong>{{ request.user.username|default:"Admin" }}</strong>
+                <small>Administrator</small>
+            </div>
+
+            <i class="bi bi-chevron-down profile-arrow"></i>
+        </div>
+
+    </div>
+
+</header>

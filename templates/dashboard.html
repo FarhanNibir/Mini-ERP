@@ -1,0 +1,102 @@
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Dashboard | Mini ERP{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="mb-4">
+        <h4 class="fw-bold">Dashboard</h4>
+        <p class="text-secondary mb-0">
+            Welcome back! Here's what's happening with your business.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <span>Total Sales</span>
+                <h3>৳ 0.00</h3>
+                <small>Sales overview</small>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="bi bi-cart-check"></i>
+                </div>
+                <span>Total Purchases</span>
+                <h3>৳ 0.00</h3>
+                <small>Purchase overview</small>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+                <span>Total Products</span>
+                <h3>0</h3>
+                <small>Products in catalog</small>
+            </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6">
+            <div class="dashboard-card">
+                <div class="card-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <span>Total Parties</span>
+                <h3>0</h3>
+                <small>Customers and suppliers</small>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mt-2">
+
+        <div class="col-lg-8">
+            <div class="dashboard-panel">
+                <h5>Sales Overview</h5>
+                <p class="text-secondary">
+                    Your sales analytics will appear here.
+                </p>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="dashboard-panel">
+                <h5>Quick Actions</h5>
+
+                <div class="quick-action">
+                    <i class="bi bi-plus-circle"></i>
+                    New Sale
+                </div>
+
+                <div class="quick-action">
+                    <i class="bi bi-cart-plus"></i>
+                    New Purchase
+                </div>
+
+                <div class="quick-action">
+                    <i class="bi bi-box"></i>
+                    Add Product
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
