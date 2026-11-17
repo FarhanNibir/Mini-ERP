@@ -1,0 +1,123 @@
+
+{% extends "layouts/base.html" %}
+
+{% block title %}Stock Balance{% endblock %}
+
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Stock Balance</h2>
+        <p class="text-muted mb-0">View current stock across your warehouses.</p>
+    </div>
+    <a href="{% url 'inventory:stock_ledger_list' %}" class="btn btn-outline-primary">
+        <i class="bi bi-journal-text me-1"></i> Stock Ledger
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+        <form method="GET" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label">Company</label>
+                <select name="company" class="form-select">
+                    <option value="">All Companies</option>
+                    {% for company in companies %}
+                        <option value="{{ company.id }}"
+                            {% if selected_company == company.id|stringformat:"s" %}selected{% endif %}>
+                            {{ company.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Warehouse</label>
+                <select name="warehouse" class="form-select">
+                    <option value="">All Warehouses</option>
+                    {% for warehouse in warehouses %}
+                        <option value="{{ warehouse.id }}"
+                            {% if selected_warehouse == warehouse.id|stringformat:"s" %}selected{% endif %}>
+                            {{ warehouse.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Product</label>
+                <select name="product" class="form-select">
+                    <option value="">All Products</option>
+                    {% for product in products %}
+                        <option value="{{ product.id }}"
+                            {% if selected_product == product.id|stringformat:"s" %}selected{% endif %}>
+                            {{ product.sku }} - {{ product.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Search</label>
+                <input type="text" name="search" class="form-control"
+                       placeholder="Product or warehouse..."
+                       value="{{ search_query }}">
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-search me-1"></i> Filter
+                </button>
+                <a href="{% url 'inventory:stock_balance_list' %}"
+                   class="btn btn-light border">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Stock Overview</h5>
+        <span class="badge bg-secondary">{{ total_records }} Records</span>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Category</th>
+                        <th>Warehouse</th>
+                        <th class="text-end">Total IN</th>
+                        <th class="text-end">Total OUT</th>
+                        <th class="text-end">Balance</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in balances %}
+                    <tr>
+                        <td class="fw-semibold">{{ row.product__name }}</td>
+                        <td>{{ row.product__sku }}</td>
+                        <td>{{ row.product__category__name|default:"-" }}</td>
+                        <td>{{ row.warehouse__name }}</td>
+                        <td class="text-end text-success">{{ row.total_in|floatformat:3 }}</td>
+                        <td class="text-end text-danger">{{ row.total_out|floatformat:3 }}</td>
+                        <td class="text-end fw-bold">{{ row.balance|floatformat:3 }}</td>
+                        <td>{{ row.product__unit__symbol|default:"-" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-box-seam fs-2 d-block mb-2"></i>
+                            No stock records found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

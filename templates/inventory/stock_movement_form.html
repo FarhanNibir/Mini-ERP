@@ -1,0 +1,231 @@
+
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ page_title }} | Mini ERP{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">{{ page_title }}</h4>
+            <p class="text-secondary mb-0">
+                Create an inventory transaction with one or more products.
+            </p>
+        </div>
+
+        <a href="{% url 'inventory:stock_movement_list' %}"
+           class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Back
+        </a>
+    </div>
+
+    <div class="dashboard-panel">
+        <form method="POST" id="movementForm">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <h5 class="mb-3">Movement Information</h5>
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Company *</label>
+                    {{ form.company }}
+                    {{ form.company.errors }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Movement Type *</label>
+                    {{ form.movement_type }}
+                    {{ form.movement_type.errors }}
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Movement Date *</label>
+                    {{ form.movement_date }}
+                    {{ form.movement_date.errors }}
+                </div>
+
+                <div class="col-md-6" id="sourceWarehouseField">
+                    <label class="form-label fw-semibold">Source Warehouse</label>
+                    {{ form.source_warehouse }}
+                    {{ form.source_warehouse.errors }}
+                </div>
+
+                <div class="col-md-6" id="destinationWarehouseField">
+                    <label class="form-label fw-semibold">Destination Warehouse</label>
+                    {{ form.destination_warehouse }}
+                    {{ form.destination_warehouse.errors }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Reference No.</label>
+                    {{ form.reference_no }}
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Notes</label>
+                    {{ form.notes }}
+                </div>
+
+            </div>
+
+            <hr class="my-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Movement Products</h5>
+
+                <button type="button" class="btn btn-sm btn-outline-primary"
+                        id="addProductRow">
+                    <i class="bi bi-plus-lg me-1"></i> Add Product
+                </button>
+            </div>
+
+            {{ formset.management_form }}
+
+            {% if formset.non_form_errors %}
+                <div class="alert alert-danger">
+                    {{ formset.non_form_errors }}
+                </div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table class="table erp-table align-middle">
+                    <thead>
+                        <tr>
+                            <th style="min-width:250px;">Product</th>
+                            <th style="min-width:130px;">Quantity</th>
+                            <th style="min-width:150px;">Unit Cost</th>
+                            <th style="width:90px;">Remove</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="productRows">
+                        {% for item_form in formset %}
+                        <tr class="product-row">
+                            {% for hidden in item_form.hidden_fields %}
+                                {{ hidden }}
+                            {% endfor %}
+
+                            <td>
+                                {{ item_form.product }}
+                                {% for error in item_form.product.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </td>
+
+                            <td>
+                                {{ item_form.quantity }}
+                                {% for error in item_form.quantity.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </td>
+
+                            <td>
+                                {{ item_form.unit_cost }}
+                                {% for error in item_form.unit_cost.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </td>
+
+                            <td class="text-center">
+                                {% if item_form.DELETE %}
+                                    <span class="d-none">{{ item_form.DELETE }}</span>
+                                {% endif %}
+                                <button type="button"
+                                        class="btn btn-sm btn-outline-danger remove-row">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <template id="emptyProductForm">
+                <tr class="product-row">
+                    {% for hidden in formset.empty_form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+                    <td>{{ formset.empty_form.product }}</td>
+                    <td>{{ formset.empty_form.quantity }}</td>
+                    <td>{{ formset.empty_form.unit_cost }}</td>
+                    <td class="text-center">
+                        <span class="d-none">{{ formset.empty_form.DELETE }}</span>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger remove-row">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            </template>
+
+            <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                <a href="{% url 'inventory:stock_movement_list' %}"
+                   class="btn btn-outline-secondary">Cancel</a>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save me-1"></i> Save as Draft
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const totalForms = document.getElementById("id_items-TOTAL_FORMS");
+    const rows = document.getElementById("productRows");
+    const template = document.getElementById("emptyProductForm");
+    const addButton = document.getElementById("addProductRow");
+
+    addButton.addEventListener("click", function () {
+        const index = parseInt(totalForms.value, 10);
+        const html = template.innerHTML.replace(/__prefix__/g, index);
+
+        rows.insertAdjacentHTML("beforeend", html);
+        totalForms.value = index + 1;
+    });
+
+    rows.addEventListener("click", function (event) {
+        const button = event.target.closest(".remove-row");
+        if (!button) return;
+
+        const row = button.closest(".product-row");
+        const deleteInput = row.querySelector('input[type="checkbox"][name$="-DELETE"]');
+
+        if (deleteInput) {
+            deleteInput.checked = true;
+            row.style.display = "none";
+        } else {
+            row.remove();
+        }
+    });
+
+    const movementType = document.getElementById("id_movement_type");
+    const sourceField = document.getElementById("sourceWarehouseField");
+    const destinationField = document.getElementById("destinationWarehouseField");
+
+    function updateWarehouseFields() {
+        const type = movementType.value;
+
+        sourceField.style.display =
+            ["OUT", "TRANSFER", "ADJ_OUT"].includes(type) ? "" : "none";
+
+        destinationField.style.display =
+            ["OPENING", "IN", "TRANSFER", "ADJ_IN"].includes(type) ? "" : "none";
+    }
+
+    movementType.addEventListener("change", updateWarehouseFields);
+    updateWarehouseFields();
+});
+</script>
+{% endblock %}

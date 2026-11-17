@@ -1,0 +1,166 @@
+
+{% extends "layouts/base.html" %}
+
+{% block title %}{{ movement.movement_no }} | Mini ERP{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">{{ movement.movement_no }}</h4>
+            <p class="text-secondary mb-0">
+                Stock movement details and transaction information.
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a href="{% url 'inventory:stock_movement_list' %}"
+               class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Back
+            </a>
+
+            {% if movement.status == "DRAFT" %}
+                <a href="{% url 'inventory:stock_movement_edit' movement.pk %}"
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-pencil-square me-1"></i> Edit
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="dashboard-panel mb-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="mb-0">Movement Information</h5>
+
+            {% if movement.status == "POSTED" %}
+                <span class="status-badge active">Posted</span>
+            {% elif movement.status == "DRAFT" %}
+                <span class="status-badge inactive">Draft</span>
+            {% else %}
+                <span class="status-badge inactive">Cancelled</span>
+            {% endif %}
+        </div>
+
+        <div class="row g-4">
+
+            <div class="col-md-4">
+                <small class="text-secondary">Movement Number</small>
+                <div class="fw-semibold">{{ movement.movement_no }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Company</small>
+                <div class="fw-semibold">{{ movement.company.name }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Movement Type</small>
+                <div class="fw-semibold">{{ movement.get_movement_type_display }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Movement Date</small>
+                <div class="fw-semibold">{{ movement.movement_date|date:"d M Y" }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Reference Number</small>
+                <div class="fw-semibold">{{ movement.reference_no|default:"—" }}</div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Source Warehouse</small>
+                <div class="fw-semibold">
+                    {{ movement.source_warehouse.name|default:"—" }}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <small class="text-secondary">Destination Warehouse</small>
+                <div class="fw-semibold">
+                    {{ movement.destination_warehouse.name|default:"—" }}
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <small class="text-secondary">Notes</small>
+                <div class="fw-semibold">{{ movement.notes|default:"—" }}</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="dashboard-panel mb-4">
+        <h5 class="mb-4">Movement Products</h5>
+
+        <div class="table-responsive">
+            <table class="table erp-table align-middle">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th class="text-end">Quantity</th>
+                        <th class="text-end">Unit Cost</th>
+                        <th class="text-end">Total Cost</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td class="fw-semibold">{{ item.product.name }}</td>
+                        <td>{{ item.product.sku }}</td>
+                        <td class="text-end">{{ item.quantity }}</td>
+                        <td class="text-end">{{ item.unit_cost }}</td>
+                        <td class="text-end">
+                            {{ item.line_total|floatformat:2 }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            No products added.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-end mt-3">
+                <h5>
+                    Total Cost:
+                    <span class="fw-bold">{{ total_cost|floatformat:2 }}</span>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    {% if movement.status == "DRAFT" %}
+    <div class="d-flex justify-content-end gap-2">
+
+        <form method="POST"
+              action="{% url 'inventory:stock_movement_delete' movement.pk %}"
+              onsubmit="return confirm('Delete this draft movement?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">
+                <i class="bi bi-trash me-1"></i> Delete Draft
+            </button>
+        </form>
+
+        <form method="POST"
+              action="{% url 'inventory:stock_movement_post' movement.pk %}"
+              onsubmit="return confirm('Post this movement? This will update stock balances.');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle me-1"></i> Post Movement
+            </button>
+        </form>
+
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
