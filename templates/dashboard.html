@@ -14,53 +14,66 @@
         </p>
     </div>
 
-    <div class="row g-4">
+    
+<div class="row g-4">
 
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <i class="bi bi-currency-dollar"></i>
-                </div>
-                <span>Total Sales</span>
-                <h3>৳ 0.00</h3>
-                <small>Sales overview</small>
+    <div class="col-xl-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-building"></i>
             </div>
+            <span>Total Companies</span>
+            <h3>{{ total_companies }}</h3>
+            <small>Registered companies</small>
         </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <i class="bi bi-cart-check"></i>
-                </div>
-                <span>Total Purchases</span>
-                <h3>৳ 0.00</h3>
-                <small>Purchase overview</small>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <i class="bi bi-box-seam"></i>
-                </div>
-                <span>Total Products</span>
-                <h3>0</h3>
-                <small>Products in catalog</small>
-            </div>
-        </div>
-
-        <div class="col-xl-3 col-md-6">
-            <div class="dashboard-card">
-                <div class="card-icon">
-                    <i class="bi bi-people"></i>
-                </div>
-                <span>Total Parties</span>
-                <h3>0</h3>
-                <small>Customers and suppliers</small>
-            </div>
-        </div>
-
     </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-diagram-3"></i>
+            </div>
+            <span>Total Branches</span>
+            <h3>{{ total_branches }}</h3>
+            <small>Registered branches</small>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <span>Total Products</span>
+            <h3>{{ total_products }}</h3>
+            <small>Products in catalog</small>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-shop"></i>
+            </div>
+            <span>Total Warehouses</span>
+            <h3>{{ total_warehouses }}</h3>
+            <small>Registered warehouses</small>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-arrow-left-right"></i>
+            </div>
+            <span>Stock Movements</span>
+            <h3>{{ total_stock_movements }}</h3>
+            <small>All stock transactions</small>
+        </div>
+    </div>
+
+</div>
+
 
     <div class="row g-4 mt-2">
 

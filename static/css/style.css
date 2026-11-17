@@ -520,3 +520,127 @@ a {
     color: var(--accent);
     font-size: 17px;
 }
+
+/* =================================
+   ERP TABLES
+================================= */
+
+.erp-table {
+    color: var(--text-primary);
+    margin-bottom: 0;
+    font-size: 13px;
+    white-space: nowrap;
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--text-primary);
+    --bs-table-border-color: var(--border-color);
+    --bs-table-hover-bg: var(--surface-secondary);
+    --bs-table-hover-color: var(--text-primary);
+}
+
+.erp-table thead th {
+    background: var(--surface-secondary);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.erp-table tbody td {
+    padding: 14px;
+    border-color: var(--border-color);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.inactive {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.form-control {
+    background-color: var(--surface);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.form-control:focus {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.12);
+}
+
+.form-control::placeholder {
+    color: var(--text-secondary);
+}
+
+/* =================================
+   PRODUCT FORMS
+================================= */
+
+.form-section-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 22px;
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-size: 12px;
+}
+
+.form-select {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.form-select:focus {
+    background-color: var(--surface);
+    color: var(--text-primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 0.2rem rgba(13, 148, 136, 0.12);
+}
+
+.form-check-label {
+    color: var(--text-primary);
+}
+/* Sidebar Sub Navigation */
+.sidebar-nav .sub-nav-link {
+    padding-left: 48px;
+    font-size: 13px;
+    min-height: 38px;
+}
+
+.sidebar-nav .sub-nav-link i {
+    font-size: 18px;
+}
+
+.sidebar-nav .nav-link .nav-arrow {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+
+.sidebar-nav .nav-link[aria-expanded="true"] .nav-arrow {
+    transform: rotate(180deg);
+}
+
+.sidebar-nav .sub-nav-link.active {
+    color: var(--accent);
+    background: var(--accent-light);
+    font-weight: 600;
+}

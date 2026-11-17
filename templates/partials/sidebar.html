@@ -1,6 +1,4 @@
 
-{% load static %}
-
 <aside class="sidebar" id="sidebar">
 
     <!-- Brand -->
@@ -8,6 +6,7 @@
         <div class="brand-logo">
             <i class="bi bi-boxes"></i>
         </div>
+
         <div class="brand-info">
             <h5>Mini ERP</h5>
             <span>Business Management</span>
@@ -19,48 +18,103 @@
         <div class="company-icon">
             <i class="bi bi-building"></i>
         </div>
+
         <div class="company-info">
             <strong>My Company</strong>
             <small>Head Office</small>
         </div>
+
         <i class="bi bi-chevron-down company-arrow"></i>
     </div>
 
     <!-- Navigation -->
     <nav class="sidebar-nav">
 
+        <!-- Workspace -->
         <span class="nav-section-title">WORKSPACE</span>
 
-        <a href="#" class="nav-link active">
+        <a href="{% url 'core:dashboard' %}"
+           class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
             <i class="bi bi-grid"></i>
             <span>Dashboard</span>
         </a>
 
+        <!-- Business Operations -->
         <span class="nav-section-title">BUSINESS OPERATIONS</span>
 
-        <a href="#" class="nav-link">
+        <!-- Inventory -->
+        <a class="nav-link"
+           data-bs-toggle="collapse"
+           href="#inventoryMenu"
+           role="button"
+           aria-expanded="{% if request.resolver_match.namespace == 'catalog' or request.resolver_match.namespace == 'inventory' %}true{% else %}false{% endif %}"
+           aria-controls="inventoryMenu">
+
             <i class="bi bi-box-seam"></i>
             <span>Inventory</span>
             <i class="bi bi-chevron-down nav-arrow"></i>
         </a>
 
+        <div class="collapse {% if request.resolver_match.namespace == 'catalog' or request.resolver_match.namespace == 'inventory' %}show{% endif %}"
+             id="inventoryMenu">
+
+            <!-- Products -->
+            <a href="{% url 'catalog:product_list' %}"
+               class="nav-link sub-nav-link {% if request.resolver_match.namespace == 'catalog' %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Products</span>
+            </a>
+
+           <!-- Categories -->
+            <a href="{% url 'catalog:category_list' %}"
+            class="nav-link sub-nav-link {% if request.resolver_match.url_name == 'category_list' or request.resolver_match.url_name == 'category_create' or request.resolver_match.url_name == 'category_edit' %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Categories</span>
+            </a>
+
+            <!-- Units -->
+            <a href="{% url 'catalog:unit_list' %}"
+            class="nav-link sub-nav-link {% if request.resolver_match.url_name == 'unit_list' or request.resolver_match.url_name == 'unit_create' or request.resolver_match.url_name == 'unit_edit' %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Units</span>
+            </a>
+
+            <!-- Warehouses -->
+            <a href="{% url 'inventory:warehouse_list' %}"
+               class="nav-link sub-nav-link {% if request.resolver_match.namespace == 'inventory' and 'warehouse' in request.resolver_match.url_name %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Warehouses</span>
+            </a>
+
+            <!-- Stock Movements -->
+            <a href="#" class="nav-link sub-nav-link">
+                <i class="bi bi-dot"></i>
+                <span>Stock Movements</span>
+            </a>
+
+        </div>
+
+        <!-- Purchases -->
         <a href="#" class="nav-link">
             <i class="bi bi-cart3"></i>
             <span>Purchases</span>
             <i class="bi bi-chevron-down nav-arrow"></i>
         </a>
 
+        <!-- Sales -->
         <a href="#" class="nav-link">
             <i class="bi bi-receipt"></i>
             <span>Sales</span>
             <i class="bi bi-chevron-down nav-arrow"></i>
         </a>
 
+        <!-- Parties -->
         <a href="#" class="nav-link">
             <i class="bi bi-people"></i>
             <span>Parties</span>
         </a>
 
+        <!-- Finance -->
         <span class="nav-section-title">FINANCE</span>
 
         <a href="#" class="nav-link">
@@ -74,6 +128,7 @@
             <span>Reports</span>
         </a>
 
+        <!-- System -->
         <span class="nav-section-title">SYSTEM</span>
 
         <a href="#" class="nav-link">
@@ -85,13 +140,171 @@
 
     <!-- Sidebar Footer -->
     <div class="sidebar-footer">
+
         <div class="sidebar-footer-icon">
             <i class="bi bi-headset"></i>
         </div>
+
         <div>
             <strong>Need Help?</strong>
             <small>Contact support</small>
         </div>
+
+    </div>
+
+</aside>
+<aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <div class="sidebar-brand">
+        <div class="brand-logo">
+            <i class="bi bi-boxes"></i>
+        </div>
+
+        <div class="brand-info">
+            <h5>Mini ERP</h5>
+            <span>Business Management</span>
+        </div>
+    </div>
+
+    <!-- Company -->
+    <div class="sidebar-company">
+        <div class="company-icon">
+            <i class="bi bi-building"></i>
+        </div>
+
+        <div class="company-info">
+            <strong>My Company</strong>
+            <small>Head Office</small>
+        </div>
+
+        <i class="bi bi-chevron-down company-arrow"></i>
+    </div>
+
+    <!-- Navigation -->
+    {% with ns=request.resolver_match.namespace name=request.resolver_match.url_name %}
+    <nav class="sidebar-nav">
+
+        <!-- Workspace -->
+        <span class="nav-section-title">WORKSPACE</span>
+
+        <a href="{% url 'core:dashboard' %}"
+           class="nav-link {% if name == 'dashboard' %}active{% endif %}">
+            <i class="bi bi-grid"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <!-- Business Operations -->
+        <span class="nav-section-title">BUSINESS OPERATIONS</span>
+
+        <!-- Inventory (collapsible) -->
+        <a class="nav-link {% if ns == 'catalog' or ns == 'inventory' %}parent-active{% else %}collapsed{% endif %}"
+           data-bs-toggle="collapse"
+           data-bs-target="#inventoryMenu"
+           href="#inventoryMenu"
+           role="button"
+           aria-expanded="{% if ns == 'catalog' or ns == 'inventory' %}true{% else %}false{% endif %}"
+           aria-controls="inventoryMenu">
+
+            <i class="bi bi-box-seam"></i>
+            <span>Inventory</span>
+            <i class="bi bi-chevron-down nav-arrow"></i>
+        </a>
+
+        <div class="collapse {% if ns == 'catalog' or ns == 'inventory' %}show{% endif %}"
+             id="inventoryMenu">
+
+            <!-- Products -->
+            <a href="{% url 'catalog:product_list' %}"
+               class="nav-link sub-nav-link {% if ns == 'catalog' and 'product' in name %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Products</span>
+            </a>
+
+            <!-- Categories -->
+            <a href="{% url 'catalog:category_list' %}"
+               class="nav-link sub-nav-link {% if ns == 'catalog' and 'category' in name %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Categories</span>
+            </a>
+
+            <!-- Units -->
+            <a href="{% url 'catalog:unit_list' %}"
+               class="nav-link sub-nav-link {% if ns == 'catalog' and 'unit' in name %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Units</span>
+            </a>
+
+            <!-- Warehouses -->
+            <a href="{% url 'inventory:warehouse_list' %}"
+               class="nav-link sub-nav-link {% if ns == 'inventory' and 'warehouse' in name %}active{% endif %}">
+                <i class="bi bi-dot"></i>
+                <span>Warehouses</span>
+            </a>
+
+            <!-- Stock Movements -->
+            <a href="#" class="nav-link sub-nav-link">
+                <i class="bi bi-dot"></i>
+                <span>Stock Movements</span>
+            </a>
+
+        </div>
+
+        <!-- Purchases (no submenu yet, so no arrow) -->
+        <a href="#" class="nav-link">
+            <i class="bi bi-cart3"></i>
+            <span>Purchases</span>
+        </a>
+
+        <!-- Sales (no submenu yet, so no arrow) -->
+        <a href="#" class="nav-link">
+            <i class="bi bi-receipt"></i>
+            <span>Sales</span>
+        </a>
+
+        <!-- Parties -->
+        <a href="#" class="nav-link">
+            <i class="bi bi-people"></i>
+            <span>Parties</span>
+        </a>
+
+        <!-- Finance -->
+        <span class="nav-section-title">FINANCE</span>
+
+        <!-- Accounting (no submenu yet, so no arrow) -->
+        <a href="#" class="nav-link">
+            <i class="bi bi-calculator"></i>
+            <span>Accounting</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span>Reports</span>
+        </a>
+
+        <!-- System -->
+        <span class="nav-section-title">SYSTEM</span>
+
+        <a href="#" class="nav-link">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+        </a>
+
+    </nav>
+    {% endwith %}
+
+    <!-- Sidebar Footer -->
+    <div class="sidebar-footer">
+
+        <div class="sidebar-footer-icon">
+            <i class="bi bi-headset"></i>
+        </div>
+
+        <div>
+            <strong>Need Help?</strong>
+            <small>Contact support</small>
+        </div>
+
     </div>
 
 </aside>

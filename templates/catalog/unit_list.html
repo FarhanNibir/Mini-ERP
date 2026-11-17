@@ -1,0 +1,113 @@
+{% extends "layouts/base.html" %}
+
+{% block title %}Units | Mini ERP{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">Units</h4>
+            <p class="text-secondary mb-0">Manage product measurement units.</p>
+        </div>
+        <a href="{% url 'catalog:unit_create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Add Unit
+        </a>
+    </div>
+
+    <div class="dashboard-card mb-4">
+        <span>Total Units</span>
+        <h3>{{ total_units }}</h3>
+        <small>Units registered in the system</small>
+    </div>
+
+    <div class="dashboard-panel">
+        <h5 class="mb-4">Unit List</h5>
+
+        <form method="GET" class="mb-4">
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Search unit, symbol or company..."
+                           value="{{ search_query }}">
+                </div>
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search me-1"></i> Search
+                    </button>
+                </div>
+                {% if search_query %}
+                <div class="col-auto">
+                    <a href="{% url 'catalog:unit_list' %}"
+                       class="btn btn-outline-secondary">Clear</a>
+                </div>
+                {% endif %}
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table erp-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Unit Name</th>
+                        <th>Symbol</th>
+                        <th>Company</th>
+                        <th>Decimal Places</th>
+                        <th>Status</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unit in units %}
+                    <tr>
+                        <td class="fw-semibold">{{ unit.code }}</td>
+                        <td>{{ unit.name }}</td>
+                        <td>{{ unit.symbol }}</td>
+                        <td>{{ unit.company.name }}</td>
+                        <td>{{ unit.decimal_places }}</td>
+                        <td>
+                            {% if unit.is_active %}
+                                <span class="status-badge active">Active</span>
+                            {% else %}
+                                <span class="status-badge inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="{% url 'catalog:unit_edit' unit.pk %}"
+                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                <form method="POST"
+                                      action="{% url 'catalog:unit_delete' unit.pk %}"
+                                      onsubmit="return confirm('Delete this unit?');">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="bi bi-inbox fs-2 text-secondary"></i>
+                            <p class="text-secondary mt-2 mb-0">No units found.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-secondary small mt-3">
+            Showing {{ total_units }} unit(s)
+        </div>
+    </div>
+</div>
+{% endblock %}
